@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 
 public class Manage {
     private final Scanner scanner = new Scanner(System.in);
-    private static List<Product> products = new ArrayList<>();
+    private List<Product> products = new ArrayList<>();
     private static final Pattern pattern = Pattern.compile(",");
 
     private String category;
@@ -105,7 +105,7 @@ public class Manage {
         return products;
     }
 
-    public static void checkFileToLoad() {
+    public void checkFileToLoad() {
         String homePath = System.getProperty("user.home");
         Path path = Path.of(homePath, "desktop", "Products of Albin", "products.csv");
         Path backupPath = Path.of("resources", "products.csv");
@@ -115,7 +115,7 @@ public class Manage {
         else loadFromFile(backupPath);
     }
 
-    private static void loadFromFile(Path path) {
+    private void loadFromFile(Path path) {
         try (Stream<String> lines = Files.lines(path)) {
             products = lines
                     .map(Manage::createProducts)

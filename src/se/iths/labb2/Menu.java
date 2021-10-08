@@ -2,19 +2,24 @@ package se.iths.labb2;
 
 import java.util.Scanner;
 
-import static se.iths.labb2.Manage.checkFileToLoad;
-
 public class Menu {
     private final Scanner scanner = new Scanner(System.in);
-    Manage manage = new Manage();
-    Search search = new Search();
-    Save save = new Save();
+    Manage manage;
+    Search search;
+    Save save;
+
+    Menu() {
+        this.manage = new Manage();
+        this.search = new Search();
+        this.save = new Save();
+    }
 
     private void run() {
+        manage.checkFileToLoad();
         int choice;
         do {
             printMenuOption();
-            choice = readChoice(scanner);
+            choice = readChoice();
             executeChoice(choice);
         } while (choice != 0);
     }
@@ -22,8 +27,8 @@ public class Menu {
     private void executeChoice(int choice) {
         switch (choice) {
             case 1 -> manage.execute();
-            case 2 -> search.execute();
-            case 3 -> save.saveToFile();
+            case 2 -> runSearch();
+            case 3 -> save.saveToFile(manage.getProductList());
         }
     }
 
@@ -35,13 +40,46 @@ public class Menu {
         System.out.println("0. Exit program (don't forget to save before exiting)");
     }
 
-    private int readChoice(Scanner scanner) {
+    private void runSearch() {
+        int choice;
+        do {
+            printSearchMenuOption();
+            choice = readChoice();
+            executeSearchChoice(choice);
+        } while (choice != 0);
+    }
+
+    private void printSearchMenuOption() {
+        System.out.println("\nSearch menu");
+        System.out.println("1. Show product sorted by category");
+        System.out.println("2. Show five products with best alcohol/krona ratio (APK in Sweden)");
+        System.out.println("3. Show products less than 200kr");
+        System.out.println("4. Show products more than 200kr");
+        System.out.println("5. Search product by EAN");
+        System.out.println("0. Back to main menu");
+        System.out.println("\n(Find your local programmer to add new options for the menu)");
+    }
+
+    private void executeSearchChoice(int choice) {
+        switch (choice) {
+            case 1 -> search.showProductsByCategory(manage.getProductList());
+            case 2 -> search.showBestAPK(manage.getProductList());
+            case 3 -> search.showProductsLessThan200(manage.getProductList());
+            case 4 -> search.showProductsMoreThan200(manage.getProductList());
+            case 5 -> search.searchByEAN(manage.getProductList(), readChoice("Enter EAN for your product of choice: "));
+        }
+    }
+
+    private int readChoice(String promptText) {
+        System.out.println(promptText);
+        return readChoice();
+    }
+
+    private int readChoice() {
         return scanner.nextInt();
     }
 
     public static void main(String[] args) {
-//        Manage manage = new Manage();
-        checkFileToLoad();
         System.out.println("\nWelcome to Systembolaget!");
         Menu menu = new Menu();
         menu.run();

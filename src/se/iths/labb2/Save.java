@@ -6,15 +6,14 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class Save {
-    Manage manage = new Manage();
 
     private String convertProductToListOfString(Product product) {
         return product.getCategory() + "," + product.getBrand() + "," + product.getProductName() + ","
                 + product.getPrice() + "," + product.getAlcohol() + "," + product.getProductId();
     }
 
-    void saveToFile() {
-        List<String> stringList = manage.getProductList().stream()
+    void saveToFile(List<Product> products) {
+        List<String> stringList = products.stream()
                 .map(this::convertProductToListOfString)
                 .toList();
 
